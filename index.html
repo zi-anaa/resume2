@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adriana Franklin - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Include jsPDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 <body>
     <header>
@@ -76,10 +79,37 @@
         <a href="#contact" class="button-link">Get In Touch</a>
     </section>
 
+    <!-- Download Button -->
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="downloadPDF()" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">Download as PDF</button>
+    </div>
+
     <footer>
         <p>&copy; 2023 Adriana Franklin. All rights reserved.</p>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+
+            // Create jsPDF instance
+            const doc = new jsPDF();
+
+            // Use html2canvas to capture the webpage
+            const content = document.body;
+
+            // Convert HTML to canvas and add it to the PDF
+            const canvas = await html2canvas(content, { scale: 2 });
+            const imgData = canvas.toDataURL('image/png');
+
+            // Add image to PDF
+            const pdfWidth = doc.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
+            // Save the PDF
+            doc.save("Adriana_Franklin_Portfolio.pdf");
+        }
+    </script>
 </body>
 </html>
